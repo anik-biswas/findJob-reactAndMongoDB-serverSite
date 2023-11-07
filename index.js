@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app =express();
 const port = process.env.PORT || 5000;
 app.use(cors());
@@ -26,10 +26,17 @@ async function run() {
     const categoryCollection = client.db('jobDB').collection('category');
     const userCollection = client.db('jobDB').collection('user');
     const jobCollection = client.db('jobDB').collection('job');
+    const applyCollection = client.db('jobDB').collection('apply');
     app.post('/category',async(req,res)=>{
         const newCategory = req.body;
         console.log(newCategory);
         const result = await categoryCollection.insertOne(newCategory);
+        res.send(result);
+    })
+    app.post('/apply',async(req,res)=>{
+        const newApply = req.body;
+        console.log(newApply);
+        const result = await applyCollection.insertOne(newApply);
         res.send(result);
     })
     app.get('/category',async(req,res)=>{
@@ -46,6 +53,12 @@ async function run() {
     app.get('/job',async(req,res)=>{
         const cursor = jobCollection.find();
         const result = await cursor.toArray();
+        res.send(result);
+    })
+    app.get('/job/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) }
+        const result = await jobCollection.findOne(query);
         res.send(result);
     })
     app.post('/user', async (req, res) => {
