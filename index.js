@@ -80,13 +80,7 @@ async function run() {
 
         const job = {
             $set: {
-                // name: updatedProduct.name,
-                // bName: updatedProduct.bName,
-                // price: updatedProduct.price,
-                // taste: updatedProduct.taste,
-                // category: updatedProduct.category,
-                // description: updatedProduct.description,
-                // pImage: updatedProduct.pImage
+               
                  name :updatedJob.name,
                  category :updatedJob.category,
                  salary :updatedJob.salary,
