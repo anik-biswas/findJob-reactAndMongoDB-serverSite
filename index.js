@@ -36,13 +36,35 @@ async function run() {
         const result = await categoryCollection.insertOne(newCategory);
         res.send(result);
     })
-    app.post('/apply',async(req,res)=>{
+    // app.post('/apply',async(req,res)=>{
+    //     const newApply = req.body;
+    //     console.log(newApply);
+    //     const result = await applyCollection.insertOne(newApply);
+    //     res.send(result);
+    // })
+    app.post('/apply', async (req, res) => {
         const newApply = req.body;
-        console.log(newApply);
-        const result = await applyCollection.insertOne(newApply);
-        res.send(result);
-    })
-
+    
+        try {
+            // Find the job by its ID
+            const jobId = newApply.jobId;
+            const job = await jobCollection.findOne({ _id: new ObjectId(jobId) });
+    
+            if (!job) {
+                return res.status(404).json({ success: false, message: 'Job not found' });
+            }
+    
+            // Increment the appNumber and update the job
+            job.appNumber++;
+            await jobCollection.updateOne({ _id: new ObjectId(jobId) }, { $set: { appNumber: job.appNumber } });
+            const result = await applyCollection.insertOne(newApply);
+            // Application was successful
+            res.json({ success: true, message: 'Application successful', insertedId: result.insertedId });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ success: false, message: 'Application failed' });
+        }
+    });
     app.get('/category',async(req,res)=>{
         const cursor = categoryCollection.find();
         const result = await cursor.toArray();
@@ -104,6 +126,12 @@ async function run() {
         const result = await cursor.toArray();
         res.send(result);
     })
+    // app.get('/apply/:id', async (req, res) => {
+    //     const id = req.params.id;
+    //     const query = { _id: new ObjectId(id) }
+    //     const result = await applyCollection.findOne(query);
+    //     res.send(result);
+    // })
     app.post('/user', async (req, res) => {
         const user = req.body;
         console.log(user);
