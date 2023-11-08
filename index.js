@@ -7,7 +7,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 // app.use(cors({
-//     origin: 'http://localhost:5173', // Replace with the origin of your frontend application
+//     origin: 'http://localhost:5174', // Replace with the origin of your frontend application
 //     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 //   }));
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.265tqpu.mongodb.net/?retryWrites=true&w=majority`;
@@ -25,7 +25,7 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
 
-    await client.connect();
+    //await client.connect();
     const categoryCollection = client.db('jobDB').collection('category');
     const userCollection = client.db('jobDB').collection('user');
     const jobCollection = client.db('jobDB').collection('job');
@@ -151,7 +151,7 @@ async function run() {
     })
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+   // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
